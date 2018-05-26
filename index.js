@@ -74,6 +74,9 @@ getRecorded(_recordedId, (body)=>{
             ''+chInfo.name+'］\n'+prgInfo.description+'```')
         }
         else if(process.argv[2] === 'end'){
+            postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
+            ''+chInfo.name+'］```')
+            /*
             dropCheck(path.join(_Path,prgInfo.filename), (logLine)=>{
                 mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
                 +chInfo.name+'］\n'
@@ -84,8 +87,7 @@ getRecorded(_recordedId, (body)=>{
                     postMessage('<@263292188924968962> __**This MPEG-TS has dropped frame!!!**__')
                 }
             })
+            */
         }
     })
 })
-
-fs.writeFile("./log.txt",JSON.stringify(process.env,undefined,4));
