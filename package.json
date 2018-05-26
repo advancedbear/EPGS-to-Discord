@@ -1,0 +1,24 @@
+{
+  "name": "epgstodiscord",
+  "version": "1.0.0",
+  "description": "Post information of EPGStation to Discord channel.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/advancedbear/EPGS-to-Discord.git"
+  },
+  "author": "advancedbear",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/advancedbear/EPGS-to-Discord/issues"
+  },
+  "homepage": "https://github.com/advancedbear/EPGS-to-Discord#readme",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "iconv-lite": "^0.4.23",
+    "request": "^2.87.0"
+  }
+}
