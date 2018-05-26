@@ -70,7 +70,7 @@ getRecorded(_recordedId, (body)=>{
         chInfo = JSON.parse(chBody)
         if(process.argv[2] === 'start'){
             postMessage(':arrow_forward: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-            +chInfo.name+'］\n'+prgInfo.description+'```')
+            ''+chInfo.name+'］\n'+prgInfo.description+'```')
         }
         else if(process.argv[2] === 'end'){
             dropCheck(_Path+prgInfo.filename, (logLine)=>{
@@ -86,3 +86,5 @@ getRecorded(_recordedId, (body)=>{
         }
     })
 })
+
+fs.appendFile("./log.txt",JSON.stringify(process.env));
