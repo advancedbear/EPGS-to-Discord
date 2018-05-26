@@ -41,7 +41,7 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(path.resolve(_tsCheckPath)+' '+fileName), (err, stdout, stderr)=>{
+    exec(path.resolve(_tsCheckPath)+' '+fileName, (err, stdout, stderr)=>{
         if(err) callback(null)
         else {
             let vPIDLine, maxTotal = 0
