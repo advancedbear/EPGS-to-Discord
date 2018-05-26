@@ -2,13 +2,14 @@
 const request   = require('request')
 const exec      = require('child_process').exec
 const fs        = require('fs')
+const path      = require('path')
 const iconv     = require('iconv-lite')
 const Discord   = require('discord.js')
 // EPGStationより渡される環境変数を定数に代入
 const _recordedId = process.env.RECORDEDID
 const _title = process.env.NAME
-const _startAt = new Date(process.env.STARTAT).toLocaleTimeString("japanese")
-const _endAt = new Date(process.env.ENDAT).toLocaleTimeString("japanese")
+const _startAt = new Date(Number(process.env.STARTAT)).toLocaleTimeString("japanese")
+const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese")
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 // 利用者による設定フィールド
 const _host = "http://192.168.1.100" // EPGStationの動作するアドレスをURL形式で入力
@@ -40,7 +41,7 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(_tsCheckPath+' '+fileName, (err, stdout, stderr)=>{
+    exec(path.resolve(_tsCheckPath)+' '+fileName), (err, stdout, stderr)=>{
         if(err) callback(null)
         else {
             let vPIDLine, maxTotal = 0
@@ -73,7 +74,7 @@ getRecorded(_recordedId, (body)=>{
             ''+chInfo.name+'］\n'+prgInfo.description+'```')
         }
         else if(process.argv[2] === 'end'){
-            dropCheck(_Path+prgInfo.filename, (logLine)=>{
+            dropCheck(path.join(_Path,prgInfo.filename), (logLine)=>{
                 mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
                 +chInfo.name+'］\n'
                 if(logLine != null) mes += logLine.join('\n')
