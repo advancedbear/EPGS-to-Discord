@@ -87,4 +87,4 @@ getRecorded(_recordedId, (body)=>{
     })
 })
 
-fs.appendFile("./log.txt",JSON.stringify(process.env,undefined,4));
+fs.writeFile("./log.txt",JSON.stringify(process.env,undefined,4));
