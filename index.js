@@ -18,7 +18,7 @@ const _basicPass = null // EPGStationでBASIC認証利用時はパスワード�
 const _tsCheckPath = "tscheck.exe" // tscheck.exeのパスを指定（動作フォルダ直下を推奨）
 const _Path = "D:\\" // 録画ファイルの保存フォルダを指定
 // DiscordのWebhookアドレスを入力
-const webhookURL = "https://discordapp.com/api/webhooks/417016048253140992/1eUAwZkqGpubVmk1It9SQW9dx6JGLCjm51Zff96UF0UpbSO5W-45ikYmzHzz8ulFED5H".split('/')
+const webhookURL = "".split('/')
 // 設定フィールド終わり
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
