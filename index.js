@@ -12,18 +12,25 @@ const _startAt = new Date(Number(process.env.STARTAT)).toLocaleTimeString("japan
 const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese")
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 // 利用者による設定フィールド
-const _host = "http://192.168.1.100" // EPGStationの動作するアドレスをURL形式で入力
-const _basicId = null // EPGStationでBASIC認証利用時はユーザー名を入力、非利用時はnullを指定
-const _basicPass = null // EPGStationでBASIC認証利用時はパスワードを入力、非利用時はnullを指定
-const _tsCheckPath = "tscheck.exe" // tscheck.exeのパスを指定（動作フォルダ直下を推奨）
-const _Path = "D:\\" // 録画ファイルの保存フォルダを指定
+var _config;
+try {
+    _config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
+} catch (e) {
+    console.error("config.json not found!")
+    process.exit()
+}
+const _host = _config.host // EPGStationの動作するアドレスをURL形式で入力
+const _basicId = _config.basicId // EPGStationでBASIC認証利用時はユーザー名を入力、非利用時はnullを指定
+const _basicPass = _config.basicPass // EPGStationでBASIC認証利用時はパスワードを入力、非利用時はnullを指定
+const _tsCheckPath = _config.tsCheckPath // tscheck.exeのパスを指定（動作フォルダ直下を推奨）
+const _Path = _config.recordedPath // 録画ファイルの保存フォルダを指定
 // DiscordのWebhookアドレスを入力
-const webhookURL = "".split('/')
+const webhookURL = _config.webhookURL.split('/')
 // 設定フィールド終わり
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
 // 設定内容からEPGStationのアドレス生成と、Webhookの呼び出しを行う
-const _hostName = !_basicId ? _host : _basicId+':'+_basicPass+'@'+_host
+const _hostName = !_basicId ? "http://"+_host : "http://"+_basicId+':'+_basicPass+'@'+_host
 const webhook = new Discord.WebhookClient(webhookURL[5],webhookURL[6])
 
 var getRecorded = (recordedId, callback)=>{

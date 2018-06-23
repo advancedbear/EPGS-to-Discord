@@ -1,0 +1,8 @@
+{
+    "host":"127.0.0.1",
+    "basicId":null,
+    "basicPass":null,
+    "tsCheckPath":"tscheck.exe",
+    "recordedPath":"D:\\",
+    "webhookURL":"https://discordapp.com/api/webhooks/*********/*********"
+}
