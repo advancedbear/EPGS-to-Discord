@@ -15,7 +15,7 @@ const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese"
 // 利用者による設定フィールド
 var _config;
 try {
-    _config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
+    _config = JSON.parse(fs.readFileSync(path.join(__dirname,'config.json'), 'utf8'))
 } catch (e) {
     console.error("config.json not found!")
     process.exit()
@@ -75,7 +75,7 @@ var postMessage = (message)=>{
 
 if(process.argv[2] === 'start'){
     postMessage(':arrow_forward: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-    ''+_channel+'］\n'+_description+'```')
+    ''+_channel+'］```')
 }
 else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
@@ -94,5 +94,5 @@ else if(process.argv[2] === 'end'){
     */
 }
 else if(process.argv[2] === 'reserve'){
-    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］``````'+_description+'```')
-}
+    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］\n'+_description+'```')
+}2
