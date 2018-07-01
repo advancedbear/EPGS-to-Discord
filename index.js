@@ -6,8 +6,9 @@ const path      = require('path')
 const iconv     = require('iconv-lite')
 const Discord   = require('discord.js')
 // EPGStationより渡される環境変数を定数に代入
-const _recordedId = process.env.RECORDEDID
+const _channel = process.env.CHANNELNAME
 const _title = process.env.NAME
+const _description = process.env.DESCRIPTION
 const _startAt = new Date(Number(process.env.STARTAT)).toLocaleTimeString("japanese")
 const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese")
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
@@ -72,29 +73,26 @@ var postMessage = (message)=>{
     webhook.send(message)
 }
 
-getRecorded(_recordedId, (body)=>{
-    prgInfo = JSON.parse(body)
-    getChannel(prgInfo.channelId, (chBody)=>{
-        chInfo = JSON.parse(chBody)
-        if(process.argv[2] === 'start'){
-            postMessage(':arrow_forward: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-            ''+chInfo.name+'］\n'+prgInfo.description+'```')
-        }
-        else if(process.argv[2] === 'end'){
-            postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-            ''+chInfo.name+'］```')
-            /*
-            dropCheck(path.join(_Path,prgInfo.filename), (logLine)=>{
-                mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-                +chInfo.name+'］\n'
-                if(logLine != null) mes += logLine.join('\n')
-                mes += '```'
-                postMessage(mes)
-                if(logLine != null && Number(logLine[2].slice(2)!=0)){
-                    postMessage('<@263292188924968962> __**This MPEG-TS has dropped frame!!!**__')
-                }
-            })
-            */
+if(process.argv[2] === 'start'){
+    postMessage(':arrow_forward: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
+    ''+_channel+'］\n'+_description+'```')
+}
+else if(process.argv[2] === 'end'){
+    postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
+    ''+_channel+'］```')
+    /*
+    dropCheck(path.join(_Path,prgInfo.filename), (logLine)=>{
+        mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
+        +chInfo.name+'］\n'
+        if(logLine != null) mes += logLine.join('\n')
+        mes += '```'
+        postMessage(mes)
+        if(logLine != null && Number(logLine[2].slice(2)!=0)){
+            postMessage('<@263292188924968962> __**This MPEG-TS has dropped frame!!!**__')
         }
     })
-})
+    */
+}
+else if(process.argv[2] === 'reserve'){
+    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］```\n```'+_description+'```')
+}
