@@ -94,5 +94,5 @@ else if(process.argv[2] === 'end'){
     */
 }
 else if(process.argv[2] === 'reserve'){
-    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］```\n```'+_description+'```')
+    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］``````'+_description+'```')
 }
