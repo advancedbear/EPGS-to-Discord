@@ -80,10 +80,13 @@ else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
     ''+_channel+'］```')
     dropCheck(_Path, (vPID)=>{
-        if(vPID.d!='0')
-        mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
-        mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
-        postMessage(mes)
+        if(vPID.d!='0'){
+            mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
+            mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
+            postMessage(mes)
+        } else {
+            postMessage("_`This MPEG-TS has no drop.`_")
+        }
     })
 }
 else if(process.argv[2] === 'reserve'){
