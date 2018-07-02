@@ -48,7 +48,7 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(_tsselect,fileName, (err, stdout, stderr)=>{
+    exec(_tsselect,[fileName], (err, stdout, stderr)=>{
         if(!err) {
             let PIDLine = []
             let vPIDLine, maxTotal = 0
@@ -83,7 +83,7 @@ else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
     ''+_channel+'］```')
     dropCheck(_Path, (vPID)=>{
-        if(isNull(vPID)) postMessage("Cannot read recorded file!")
+        if(vPID==null) postMessage("Cannot load recorded file!")
         else if(vPID.d!='0'){
             mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
             mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
