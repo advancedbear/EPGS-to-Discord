@@ -64,6 +64,9 @@ var dropCheck = (fileName, callback)=>{
                 return 0
             })
             callback(vPIDLine)
+        } else {
+            fs.writeFileSync("dropcheck.log", stdout)
+            callback(JSON.parse("{d: '0'}"))
         }
     })
 }
