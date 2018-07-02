@@ -11,22 +11,21 @@ const _title = process.env.NAME
 const _description = process.env.DESCRIPTION
 const _startAt = new Date(Number(process.env.STARTAT)).toLocaleTimeString("japanese")
 const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese")
+const _Path = process.env.RECPATH // 録画ファイルの保存フォルダを指定
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 // 利用者による設定フィールド
 var _config;
 try {
-    _config = JSON.parse(fs.readFileSync(path.join(__dirname,'config.json'), 'utf8'))
+    _config = JSON.parse(fs.readFileSync(path.join(__dirname, "config.json"), "utf8"))
 } catch (e) {
     console.error("config.json not found!")
     process.exit()
 }
-const _host = _config.host // EPGStationの動作するアドレスをURL形式で入力
-const _basicId = _config.basicId // EPGStationでBASIC認証利用時はユーザー名を入力、非利用時はnullを指定
-const _basicPass = _config.basicPass // EPGStationでBASIC認証利用時はパスワードを入力、非利用時はnullを指定
-const _tsCheckPath = _config.tsCheckPath // tscheck.exeのパスを指定（動作フォルダ直下を推奨）
-const _Path = _config.recordedPath // 録画ファイルの保存フォルダを指定
-// DiscordのWebhookアドレスを入力
-const webhookURL = _config.webhookURL.split('/')
+const _host = _config.host // EPGStationの動作するホストアドレス
+const _basicId = _config.basicId // EPGStationでBASIC認証利用時はユーザー名、非利用時はnullを指定
+const _basicPass = _config.basicPass // EPGStationでBASIC認証利用時はパスワード、非利用時はnullを指定
+const _tsselect = path.join(__dirname, "tsselect") // tsselectの実行ファイルを指定（フォルダ直下に配置）
+const webhookURL = _config.webhookURL.split('/') // DiscordのWebhookアドレス
 // 設定フィールド終わり
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
@@ -49,22 +48,22 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(path.resolve(_tsCheckPath)+' '+fileName, (err, stdout, stderr)=>{
-        if(err) callback(null)
-        else {
+    exec(_tsselect+' '+fileName, (err, stdout, stderr)=>{
+        if(!err) {
+            let PIDLine = []
             let vPIDLine, maxTotal = 0
-            fs.readFile(fileName+".log", (err, data)=>{
-                let log = iconv.decode(data, 'utf8').split(/\r\n|\r|\n/)
-                for(line of log) {
-                    if(/pid=0x\d/.test(line)){
-                        PIDLine = line.replace(/\s+/g,'').split(',')
-                        if(maxTotal < Number(PIDLine[1].split('=')[1])){
-                            vPIDLine = PIDLine
-                        }
-                    }
+            let result = iconv.decode(stdout, 'utf8').split(/\r\n|\r|\n/)
+            for(line of result) {
+                if(/pid=0x\d/.test(line)){
+                    PIDLine.push(JSON.parse('{"'+line.replace(/\s+/g,"").replace(/=/g, '":"').replace(/,/g, '", "')+'"}'))
                 }
-                callback(vPIDLine)
+            }
+            vPIDLine = PIDLine.sort((a, b)=> {
+                if (Number(a.total) > Number(b.total)) return -1
+                if (Number(a.total) < Number(b.total)) return 1
+                return 0
             })
+            callback(vPIDLine)
         }
     })
 }
@@ -80,19 +79,13 @@ if(process.argv[2] === 'start'){
 else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
     ''+_channel+'］```')
-    /*
-    dropCheck(path.join(_Path,prgInfo.filename), (logLine)=>{
-        mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-        +chInfo.name+'］\n'
-        if(logLine != null) mes += logLine.join('\n')
-        mes += '```'
+    dropCheck(_Path, (vPID)=>{
+        if(vPID.d!='0')
+        mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
+        mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
         postMessage(mes)
-        if(logLine != null && Number(logLine[2].slice(2)!=0)){
-            postMessage('<@263292188924968962> __**This MPEG-TS has dropped frame!!!**__')
-        }
     })
-    */
 }
 else if(process.argv[2] === 'reserve'){
     postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］\n'+_description+'```')
-}2
+}
