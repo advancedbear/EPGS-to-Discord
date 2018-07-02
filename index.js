@@ -1,6 +1,6 @@
 // 必要モジュールの読み込み
 const request   = require('request')
-const exec      = require('child_process').exec
+const exec      = require('child_process').execFile
 const fs        = require('fs')
 const path      = require('path')
 const iconv     = require('iconv-lite')
@@ -48,7 +48,7 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(_tsselect+' '+fileName, (err, stdout, stderr)=>{
+    exec(_tsselect,fileName, (err, stdout, stderr)=>{
         if(!err) {
             let PIDLine = []
             let vPIDLine, maxTotal = 0
@@ -63,10 +63,10 @@ var dropCheck = (fileName, callback)=>{
                 if (Number(a.total) < Number(b.total)) return 1
                 return 0
             })
-            callback(vPIDLine)
+            callback(vPIDLine[0])
         } else {
             fs.writeFileSync("dropcheck.log", stdout)
-            callback(JSON.parse("{d: '0'}"))
+            callback(null)
         }
     })
 }
@@ -83,7 +83,8 @@ else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
     ''+_channel+'］```')
     dropCheck(_Path, (vPID)=>{
-        if(vPID.d!='0'){
+        if(isNull(vPID)) postMessage("Cannot read recorded file!")
+        else if(vPID.d!='0'){
             mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
             mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
             postMessage(mes)
