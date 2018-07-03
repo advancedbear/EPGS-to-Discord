@@ -9,6 +9,7 @@ const Discord   = require('discord.js')
 const _channel = process.env.CHANNELNAME
 const _title = process.env.NAME
 const _description = process.env.DESCRIPTION
+const _date = new Date(Number(process.env.STARTAT)).toLocaleDateString("japanese", {year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long'})
 const _startAt = new Date(Number(process.env.STARTAT)).toLocaleTimeString("japanese")
 const _endAt = new Date(Number(process.env.ENDAT)).toLocaleTimeString("japanese")
 const _Path = process.env.RECPATH // 録画ファイルの保存フォルダを指定
@@ -94,5 +95,5 @@ else if(process.argv[2] === 'end'){
     })
 }
 else if(process.argv[2] === 'reserve'){
-    postMessage(':new: __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］\n'+_description+'```')
+    postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］\n'+_description+'```')
 }
