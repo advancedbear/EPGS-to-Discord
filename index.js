@@ -1,6 +1,6 @@
 // 必要モジュールの読み込み
 const request   = require('request')
-const exec      = require('child_process').execFile
+const exec      = require('child_process').spawn
 const fs        = require('fs')
 const path      = require('path')
 const iconv     = require('iconv-lite')
@@ -46,31 +46,6 @@ var getChannel = (channelId, callback)=>{
         !err ? callback(body): callback(err)
     })
 }
-var dropCheck = (fileName, callback)=>{
-    // ファイルパスを与えるとTSファイルのドロップチェックを行う
-    // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(_tsselect,[fileName], (err, stdout, stderr)=>{
-        if(!err) {
-            let PIDLine = []
-            let vPIDLine, maxTotal = 0
-            let result = iconv.decode(stdout, 'utf8').split(/\r\n|\r|\n/)
-            for(line of result) {
-                if(/pid=0x\d/.test(line)){
-                    PIDLine.push(JSON.parse('{"'+line.replace(/\s+/g,"").replace(/=/g, '":"').replace(/,/g, '", "')+'"}'))
-                }
-            }
-            vPIDLine = PIDLine.sort((a, b)=> {
-                if (Number(a.total) > Number(b.total)) return -1
-                if (Number(a.total) < Number(b.total)) return 1
-                return 0
-            })
-            callback(vPIDLine[0])
-        } else {
-            fs.writeFileSync("dropcheck.log", stdout)
-            callback(null)
-        }
-    })
-}
 
 var postMessage = (message)=>{
     webhook.send(message)
@@ -83,15 +58,9 @@ if(process.argv[2] === 'start'){
 else if(process.argv[2] === 'end'){
     postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
     ''+_channel+'］```')
-    dropCheck(_Path, (vPID)=>{
-        if(vPID==null) postMessage("Cannot load recorded file!")
-        else if(vPID.d!='0'){
-            mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
-            mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
-            postMessage(mes)
-        } else {
-            postMessage("_`This MPEG-TS has no drop.`_")
-        }
+    let dropCheck = exec("C:\\PROGRA~1\\nodejs\\node.exe", [_Path], {cwd: __dirname, windowsHide:true})
+    dropCheck.on('close', (code)=> {
+        fs.appendFileSync("dropcheck.log", `child process exited with code ${code}`);
     })
 }
 else if(process.argv[2] === 'reserve'){
