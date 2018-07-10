@@ -49,7 +49,7 @@ var getChannel = (channelId, callback)=>{
 var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // callback = ログ内の映像PID行をカンマ区切りにした配列
-    exec(_tsselect,[fileName], (err, stdout, stderr)=>{
+    exec(_tsselect,[fileName],{maxBuffer: 2048*1024} , (err, stdout, stderr)=>{
         if(!err) {
             let PIDLine = []
             let vPIDLine, maxTotal = 0
@@ -66,7 +66,7 @@ var dropCheck = (fileName, callback)=>{
             })
             callback(vPIDLine[0])
         } else {
-            fs.writeFileSync("dropcheck.log", stdout)
+            fs.writeFileSync("dropcheck.log", stdout+"\n"+stderr)
             callback(null)
         }
     })
