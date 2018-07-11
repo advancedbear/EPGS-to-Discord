@@ -81,17 +81,16 @@ if(process.argv[2] === 'start'){
     ''+_channel+'］```')
 }
 else if(process.argv[2] === 'end'){
-    postMessage(":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+
-    ''+_channel+'］```')
+    mes = ":pause_button: "+' __**'+_title+'**__\n```'+_startAt+'～'+_endAt+'［'+_channel+'］\n'
     dropCheck(_Path, (vPID)=>{
-        if(vPID==null) postMessage("Cannot load recorded file!")
+        if(vPID==null) mes += "!===== Cannot load recorded file! =====!"
         else if(vPID.d!='0'){
-            mes = '\@everyone __**This MEPG-TS has dropped frame!!!**__\n'
-            mes += '```Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
-            postMessage(mes)
+            mes += "**!===== This MEPG-TS has dropped frame! =====!** \@everyone\n"
+            mes += 'Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```\n'
         } else {
-            postMessage("_`This MPEG-TS has no drop.`_")
+            mes += "!===== This MPEG-TS has no drop =====!"
         }
+        postMessage(mes)
     })
 }
 else if(process.argv[2] === 'reserve'){
