@@ -93,5 +93,5 @@ else if(process.argv[2] === 'end'){
 }
 else if(process.argv[2] === 'reserve'){
     // 録画予約時に投稿するメッセージ
-    postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］\t\tProgramID: '+_programid+'\n'+_description+'```')
+    postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］  (PrgID: '+_programid+')\n'+_description+'```')
 }
