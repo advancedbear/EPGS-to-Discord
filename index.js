@@ -45,7 +45,7 @@ var dropCheck = (fileName, callback)=>{
     // ファイルパスを与えるとTSファイルのドロップチェックを行う
     // 映像PIDの情報を連想配列として返す
     // callback = {total: 12345, d: 0, e: 0, scrambling: 0, offset: 12345}
-    exec(_tsselect,[fileName],{maxBuffer: 2048*1024} , (err, stdout, stderr)=>{
+    exec(_tsselect,[fileName],{maxBuffer: 4096*1024} , (err, stdout, stderr)=>{
         if(!err) {
             let vPIDLine, PIDLine = []
             let result = iconv.decode(stdout, 'utf8').split(/\r\n|\r|\n/)
@@ -61,7 +61,7 @@ var dropCheck = (fileName, callback)=>{
             }) // total値順にソートを行うことで映像PIDが配列の先頭に来るように
             callback(vPIDLine[0])
         } else {
-            fs.writeFileSync("dropcheck.log", stdout+"\n"+stderr)
+            fs.appendFileSync("dropcheck.log", fileName+": "+err+"\n")
             callback(null) // tsselect実行時にエラーが発生した場合はnullを返す
         }
     })
