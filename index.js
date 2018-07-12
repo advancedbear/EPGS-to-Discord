@@ -95,5 +95,5 @@ else if(process.argv[2] === 'end'){
 else if(process.argv[2] === 'reserve'){
     // 録画予約時に投稿するメッセージ
     postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］  (PrgID: '+_programid+')\n'+_description+'```')
-    getProgram(_programid, (result)=>{fs.appendFileSync("programs.log", _nowDate.toLocaleString()+"\r\n"+JSON.stringify(result, null, "    ")+"\r\n- - - - - -\r\n")})
+    getProgram(_programid, (result)=>{fs.appendFileSync("programs.txt", _nowDate.toLocaleString()+"\r\n"+JSON.stringify(JSON.parse(result), null, "    ")+"\r\n- - - - - -\r\n", {encoding: "utf8"})})
 }
