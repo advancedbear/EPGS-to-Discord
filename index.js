@@ -6,6 +6,7 @@ const path      = require('path')
 const iconv     = require('iconv-lite')
 const Discord   = require('discord.js')
 // EPGStationより渡される環境変数を定数に代入
+const _nowDate = new Date();
 const _channel = process.env.CHANNELNAME
 const _title = process.env.NAME
 const _description = process.env.DESCRIPTION
@@ -35,9 +36,9 @@ var getRecorded = (recordedId, callback)=>{
         !err ? callback(body): callback(err)
     })
 }
-var getChannel = (channelId, callback)=>{
+var getProgram = (programlId, callback)=>{
     // チャンネルIDを用いてMirakurun API経由でチャンネル情報を取得する
-    request.get(_hostName+":40772/api/services/"+channelId, (err, res, body)=>{
+    request.get(_hostName+":40772/api/programs/"+programlId, (err, res, body)=>{
         !err ? callback(body): callback(err)
     })
 }
@@ -94,4 +95,5 @@ else if(process.argv[2] === 'end'){
 else if(process.argv[2] === 'reserve'){
     // 録画予約時に投稿するメッセージ
     postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］  (PrgID: '+_programid+')\n'+_description+'```')
+    getProgram(_programid, (result)=>{fs.appendFileSync("programs.log", _nowDate.toLocaleString+"\n"+result+"\n- - - - - -\n")})
 }
