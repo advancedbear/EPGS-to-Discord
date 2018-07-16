@@ -83,8 +83,8 @@ else if(process.argv[2] === 'end'){
         if(vPID==null) mes += "!===== Cannot load recorded file! =====!```" // 実行結果がnullの場合
         else if(vPID.d!='0'){
             // 映像PIDのd値（ドロップ値）が0でない場合≒ドロップがある場合は詳細を投稿（メンション付き）
-            mes += "**!===== This MEPG-TS has dropped frame! =====!** \@everyone\n"
-            mes += 'Total:\t'+vPID.total+'\nDrop:\t'+vPID.d+'\nError:\t'+vPID.e+'\nScrmbling:\t'+vPID.scrambling+'```'
+            mes += "!===== This MEPG-TS has dropped frame! =====!\n"
+            mes += 'Total:     '+vPID.total+'\nDrop:      '+vPID.d+'\nError:     '+vPID.e+'\nScrmbling: '+vPID.scrambling+'```\@everyone'
         } else {
             // 映像PIDのd値が0の場合はドロップがないのでその旨を投稿
             mes += "!===== This MPEG-TS has no drop =====!```"
