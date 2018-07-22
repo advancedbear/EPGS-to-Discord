@@ -37,7 +37,7 @@ var getRecorded = (recordedId, callback)=>{
     })
 }
 var getProgram = (programlId, callback)=>{
-    // チャンネルIDを用いてMirakurun API経由でチャンネル情報を取得する
+    // チャンネルIDを用いてMirakurun API経由で番組情報を取得する
     request.get(_hostName+":40772/api/programs/"+programlId, (err, res, body)=>{
         !err ? callback(body): callback(err)
     })
@@ -62,7 +62,6 @@ var dropCheck = (fileName, callback)=>{
             }) // total値順にソートを行うことで映像PIDが配列の先頭に来るように
             callback(vPIDLine[0])
         } else {
-            fs.appendFileSync("dropcheck.log", fileName+": "+err+"\n")
             callback(null) // tsselect実行時にエラーが発生した場合はnullを返す
         }
     })
@@ -94,6 +93,5 @@ else if(process.argv[2] === 'end'){
 }
 else if(process.argv[2] === 'reserve'){
     // 録画予約時に投稿するメッセージ
-    postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］  (PrgID: '+_programid+')\n'+_description+'```')
-    getProgram(_programid, (result)=>{fs.appendFileSync("programs.txt", _nowDate.toLocaleString()+"\r\n"+JSON.stringify(JSON.parse(result), null, "    ")+"\r\n- - - - - -\r\n", {encoding: "utf8"})})
+    postMessage(':new: __**'+_title+'**__\n```'+_date+' '+_startAt+'～'+_endAt+'［'+_channel+'］\n'+_description+'```')
 }
