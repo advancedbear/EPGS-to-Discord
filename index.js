@@ -45,6 +45,7 @@ var getProgram = (programlId, callback)=>{
 var dropCheck = (callback)=>{
     // ドロップ情報を取得して返す
     let recInfo = getRecorded(_recordedid, (json)=>{
+        json = JSON.parse(json)
         try{
             callback(json.errorCnt, json.dropCnt, json.scramblingCnt)
         } catch(e) {
