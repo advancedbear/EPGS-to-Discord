@@ -47,7 +47,7 @@ var dropCheck = (callback)=>{
     let recInfo = getRecorded(_recordedid, (json)=>{
         json = JSON.parse(json)
         try{
-            callback(json.errorCnt, json.dropCnt, json.scramblingCnt)
+            callback(json.dropLog.errorCnt, json.dropLog.dropCnt, json.dropLog.scramblingCnt)
         } catch(e) {
             callback(-1, -1 ,-1)
         }
